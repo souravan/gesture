@@ -82,11 +82,6 @@ int main(int argc, char** argv)
 	//Create a black image with the size as the camera output
 	Mat imgLines = Mat::zeros(imgTmp.size(), CV_8UC3);
 
-	//Compression Parameter for PNG filetype
-	vector<int> compression;
-	compression.push_back(CV_IMWRITE_PNG_COMPRESSION);
-	compression.push_back(9);
-
 	//Record keeping variable
 	int record = 0;
 
@@ -176,13 +171,11 @@ int main(int argc, char** argv)
 
 		if (dArea == 0.00 && record != 0 || j == 3)
 		{
-			imwrite(filename, imgLines, compression);
 			printf("Gesture recorded!\n");
-			recognize[j+2] = '\0';
-			recognize[0] = 'g';
+			recognize[0] = 'g';		//Inherently, first element will be NULL if we don't do this
 			printf("%s\n", recognize);
-			keystroke(recognize);
-			imgLines = Mat::zeros(imgTmp.size(), CV_8UC3);
+			keystroke(recognize);		//Keystroke function. See keystroke.cpp
+			imgLines = Mat::zeros(imgTmp.size(), CV_8UC3);	//Resetting the threshold matrix
 			record = 0;
 			iLastX = -1;
 			iLastY = -1;
@@ -194,7 +187,7 @@ int main(int argc, char** argv)
 			Sleep(500); //idles the program for 2 seconds. Enough time to zero out the threshold
 		}
 		
-		if (recognize[j] != gestnum)
+		if (recognize[j] != gestnum)		//Recording direction to the gesture array
 		{
 			j++;
 			recognize[j] = gestnum;
