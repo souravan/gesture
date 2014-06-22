@@ -3,8 +3,10 @@ Reset the imgLines matrix is left unchanged after 2 seconds - DONE
 Re-initialize the matrix - DONE
 Record Gesture by zero threshold - DONE
 Record Gesture information in string - DONE
-Compare Gesture string with pre-defined function string.
-Translate the function string into actual string*/	
+Compare Gesture string with pre-defined function string. - DONE
+Translate the function string into actual string. - DONE
+Optimizing Cap tracing.
+*/	
 
 #include "stdafx.h"
 #include <iostream>
@@ -12,12 +14,14 @@ Translate the function string into actual string*/
 #include "opencv2/imgproc/imgproc.hpp"
 #include <sstream>
 #include <stdlib.h>
+#include <Windows.h>
+#include <WinUser.h>
 
 using namespace cv;
 using namespace std;
 using namespace std;
 
-//void int2str(int input[], char output[])
+void keystroke(char*);
 
 int main(int argc, char** argv)
 {
@@ -70,7 +74,6 @@ int main(int argc, char** argv)
 	int j = 0;
 	int gestnum = 0;
 	char *recognize = (char*)calloc(5, sizeof(int));
-	//printf("%d %d %d\n", recognize[0], recognize[1], recognize[2]);
 
 	//Capture a temporary image from the camera
 	Mat imgTmp;
@@ -178,6 +181,7 @@ int main(int argc, char** argv)
 			recognize[j+2] = '\0';
 			recognize[0] = 'g';
 			printf("%s\n", recognize);
+			keystroke(recognize);
 			imgLines = Mat::zeros(imgTmp.size(), CV_8UC3);
 			record = 0;
 			iLastX = -1;
@@ -187,6 +191,7 @@ int main(int argc, char** argv)
 			gestnum = 0;
 			free(recognize);
 			recognize = (char*)calloc(5, sizeof(int));
+			Sleep(500); //idles the program for 2 seconds. Enough time to zero out the threshold
 		}
 		
 		if (recognize[j] != gestnum)
